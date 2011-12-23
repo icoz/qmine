@@ -6,6 +6,7 @@ Render::Render()
 
 void Render::drawGrid(GLfloat gridStep)
 {
+    glPushMatrix();
     glLineWidth(1.0);
     glBegin(GL_LINES);
         glColor3f(0.0, 1.0, 0.0);
@@ -37,6 +38,7 @@ void Render::drawGrid(GLfloat gridStep)
             glVertex3f(0.0, y, 10.0);
         }
         glEnd();
+    glPopMatrix();
 }
 
 void Render::drawTestCube(GLfloat size)
@@ -116,6 +118,58 @@ void Render::drawTestCube(GLfloat size)
             //glTexCoord2f(0.0, 1.0);
             glVertex3f(x - size/2, y - size/2, z + size/2);
         glEnd(); //*/
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+}
+
+void Render::drawTestCube2(GLfloat size)
+{
+    GLfloat vertex[] = {
+        //0 --+
+        -0.5, -0.5, +0.5,
+        //1 -++
+        -0.5, +0.5, +0.5,
+        //2 +-+
+        +0.5, -0.5, +0.5,
+        //3 +++
+        +0.5, +0.5, +0.5,
+        //4 +--
+        +0.5, -0.5, -0.5,
+        //5 ++-
+        +0.5, +0.5, -0.5,
+        //6 ---
+        -0.5, -0.5, -0.5,
+        //7 -+-
+        -0.5, +0.5, -0.5
+    };
+    GLubyte indx[] = {
+        //front 0132
+        0,1,3,2,
+        //back 4576
+        4,5,7,6,
+        //right 2354
+        2,3,5,4,
+        //left 6710
+        6,7,1,0,
+        //top 1753
+        1,7,5,3,
+        //bottom 6024
+        6,0,2,4
+    };
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CW);
+//	glBindTexture(GL_TEXTURE_2D, textures[block->type]);
+    glTranslatef(2.0,2.0,2.0);
+    glScalef(size,size,size);
+    glColor3f(0.0, 0.0, 1.0);
+    glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3,GL_FLOAT,0,vertex);
+        glDrawElements(GL_QUADS, 6*4, GL_UNSIGNED_BYTE, indx);
+    glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_CULL_FACE);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
