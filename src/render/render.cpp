@@ -36,85 +36,88 @@ void Render::drawGrid(GLfloat gridStep)
             glVertex3f(0.0, y, 0.0);
             glVertex3f(0.0, y, 10.0);
         }
-    glEnd();
+        glEnd();
 }
 
-/*
-void Scene3D::mousePressEvent(QMouseEvent* pe)
+void Render::drawTestCube(GLfloat size)
 {
-   ptrMousePosition = pe->pos();
+    glPushMatrix();
+//	glEnable(GL_TEXTURE_2D);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+//	glBindTexture(GL_TEXTURE_2D, textures[block->type]);
+    //glTranslatef(0.0,0.0,0.0);
+    GLfloat x,y,z;
+    x=y=z=0.0f;
+    glScalef(size,size,size);
+    glColor3f(1.0, 1.0, 1.0);
+    //glCallList(listBlock);
+        glBegin(GL_QUADS);
+        glColor3f(1.0, 0.0, 1.0);
+            // front face
+            glNormal3f( 0.0f, 0.0f, 1.0f);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x - size/2, y - size/2, z + size/2);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x + size/2, y - size/2, z + size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x + size/2, y + size/2, z + size/2);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x - size/2, y + size/2, z + size/2);
+            // back face
+            glNormal3f( 0.0f, 0.0f, -1.0f);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x - size/2, y - size/2, z - size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x - size/2, y + size/2, z - size/2);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x + size/2, y + size/2, z - size/2);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x + size/2, y - size/2, z - size/2);
+            // left face
+            glNormal3f( -1.0f, 0.0f, 0.0f);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x - size/2, y - size/2, z - size/2);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x - size/2, y - size/2, z + size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x - size/2, y + size/2, z + size/2);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x - size/2, y + size/2, z - size/2);
+            // right face
+            glNormal3f( 1.0f, 0.0f, 0.0f);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x + size/2, y - size/2, z - size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x + size/2, y + size/2, z - size/2);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x + size/2, y + size/2, z + size/2);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x + size/2, y - size/2, z + size/2);
+            // top face
+            glNormal3f( 0.0f, 1.0f, 0.0f);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x - size/2, y + size/2, z - size/2);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x - size/2, y + size/2, z + size/2);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x + size/2, y + size/2, z + size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x + size/2, y + size/2, z - size/2);
+            // bottom face
+            glNormal3f( 0.0f, -1.0f, 0.0f);
+            //glTexCoord2f(0.0, 0.0);
+            glVertex3f(x - size/2, y - size/2, z - size/2);
+            //glTexCoord2f(1.0, 0.0);
+            glVertex3f(x + size/2, y - size/2, z - size/2);
+            //glTexCoord2f(1.0, 1.0);
+            glVertex3f(x + size/2, y - size/2, z + size/2);
+            //glTexCoord2f(0.0, 1.0);
+            glVertex3f(x - size/2, y - size/2, z + size/2);
+        glEnd(); //*/
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 }
 
-void Scene3D::mouseReleaseEvent(QMouseEvent* pe)
-{
-
-}
-
-void Scene3D::mouseMoveEvent(QMouseEvent* pe)
-{
-   xRot += 180/nSca*(GLfloat)(pe->y()-ptrMousePosition.y())/height();
-   zRot += 180/nSca*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
-
-   ptrMousePosition = pe->pos();
-
-   updateGL();
-}
-
-void Scene3D::wheelEvent(QWheelEvent* pe)
-{
-   if ((pe->delta())>0) scale_plus(); else if ((pe->delta())<0) scale_minus();
-
-   updateGL();
-}
-
-void Scene3D::keyPressEvent(QKeyEvent* pe)
-{
-   switch (pe->key())
-   {
-      case Qt::Key_Plus:
-         scale_plus();
-      break;
-
-      case Qt::Key_Equal:
-         scale_plus();
-      break;
-
-      case Qt::Key_Minus:
-         scale_minus();
-      break;
-
-      case Qt::Key_Up:
-         rotate_up();
-      break;
-
-      case Qt::Key_Down:
-         rotate_down();
-      break;
-
-      case Qt::Key_Left:
-        rotate_left();
-      break;
-
-      case Qt::Key_Right:
-         rotate_right();
-      break;
-
-      case Qt::Key_Z:
-         translate_down();
-      break;
-
-      case Qt::Key_X:
-         translate_up();
-      break;
-
-      case Qt::Key_Space:
-         defaultScene();
-      break;
-
-      case Qt::Key_Escape:
-         this->close();
-      break;
-   }
-
-   updateGL();
-}//*/

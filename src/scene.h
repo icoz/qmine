@@ -17,12 +17,15 @@ protected:
    void initializeGL();
    void resizeGL(int nWidth, int nHeight);
    void paintGL();
-//   void mousePressEvent(QMouseEvent* pe);
-//   void mouseMoveEvent(QMouseEvent* pe);
-//   void mouseReleaseEvent(QMouseEvent* pe);
-//   void wheelEvent(QWheelEvent* pe);
-//   void keyPressEvent(QKeyEvent* pe);
-
+   void mousePressEvent(QMouseEvent* pe);
+   void mouseMoveEvent(QMouseEvent* pe);
+   void mouseReleaseEvent(QMouseEvent* pe);
+   void wheelEvent(QWheelEvent* pe);
+   void keyPressEvent(QKeyEvent* pe);
+private:
+   QQuaternion camera;
+   QPoint ptrMousePosition;
+   GLfloat xRot, yRot, zRot, nSca;
 };
 
 #endif // SCENE_H
