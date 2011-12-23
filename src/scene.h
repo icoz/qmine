@@ -23,7 +23,7 @@ protected:
    void wheelEvent(QWheelEvent* pe);
    void keyPressEvent(QKeyEvent* pe);
 private:
-   QQuaternion camera;
+   struct {GLfloat x,y,z,scale,xRot,yRot,zRot;} camera;
    QPoint ptrMousePosition;
    GLfloat xRot, yRot, zRot, nSca;
 };
