@@ -15,11 +15,14 @@ UI_DIR = build
 
 SOURCES += src/main.cpp \
     src/scene.cpp \
-    src/render/render.cpp
+    src/render/render.cpp \
+    src/world/chunk.cpp
 
 HEADERS  += \
     src/scene.h \
-    src/render/render.h
+    src/render/render.h \
+    src/world/chunk.h \
+    src/world/block.h
 
 FORMS    +=
 
