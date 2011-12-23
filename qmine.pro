@@ -22,3 +22,6 @@ HEADERS  += \
     src/render/render.h
 
 FORMS    +=
+
+RESOURCES += \
+    src/res/res.qrc
