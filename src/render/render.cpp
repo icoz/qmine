@@ -36,85 +36,27 @@ void Render::drawGrid(GLfloat gridStep)
             glVertex3f(0.0, y, 0.0);
             glVertex3f(0.0, y, 10.0);
         }
-    glEnd();
+        glEnd();
 }
 
-/*
-void Scene3D::mousePressEvent(QMouseEvent* pe)
+void Render::drawTestCube(GLfloat x, GLfloat y, GLfloat z, GLfloat size)
 {
-   ptrMousePosition = pe->pos();
+    Q_UNUSED(size);
+    QVector<avVertex3> v;
+    QVector<avTexCube> t;
+    for (unsigned int i = 0; i < sizeof(cube)/sizeof(GLfloat); i += 3){
+        v.append(avVertex3(x + cube[i], y + cube[i+1], z + cube[i+2]));
+    }
+    //t.append(texture_by_id[btDirt]);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+    glTexCoordPointer(2, GL_FLOAT, 0, t.constData());
+    glVertexPointer(3, GL_FLOAT, 0, v.constData());
+    glDrawArrays(GL_QUADS, 0, 24);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
-void Scene3D::mouseReleaseEvent(QMouseEvent* pe)
-{
-
-}
-
-void Scene3D::mouseMoveEvent(QMouseEvent* pe)
-{
-   xRot += 180/nSca*(GLfloat)(pe->y()-ptrMousePosition.y())/height();
-   zRot += 180/nSca*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
-
-   ptrMousePosition = pe->pos();
-
-   updateGL();
-}
-
-void Scene3D::wheelEvent(QWheelEvent* pe)
-{
-   if ((pe->delta())>0) scale_plus(); else if ((pe->delta())<0) scale_minus();
-
-   updateGL();
-}
-
-void Scene3D::keyPressEvent(QKeyEvent* pe)
-{
-   switch (pe->key())
-   {
-      case Qt::Key_Plus:
-         scale_plus();
-      break;
-
-      case Qt::Key_Equal:
-         scale_plus();
-      break;
-
-      case Qt::Key_Minus:
-         scale_minus();
-      break;
-
-      case Qt::Key_Up:
-         rotate_up();
-      break;
-
-      case Qt::Key_Down:
-         rotate_down();
-      break;
-
-      case Qt::Key_Left:
-        rotate_left();
-      break;
-
-      case Qt::Key_Right:
-         rotate_right();
-      break;
-
-      case Qt::Key_Z:
-         translate_down();
-      break;
-
-      case Qt::Key_X:
-         translate_up();
-      break;
-
-      case Qt::Key_Space:
-         defaultScene();
-      break;
-
-      case Qt::Key_Escape:
-         this->close();
-      break;
-   }
-
-   updateGL();
-}//*/
