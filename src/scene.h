@@ -20,18 +20,23 @@ signals:
 
 public slots:
 protected:
-   void initializeGL();
-   void resizeGL(int nWidth, int nHeight);
-   void paintGL();
-   void mousePressEvent(QMouseEvent* pe);
-   void mouseMoveEvent(QMouseEvent* pe);
-   void mouseReleaseEvent(QMouseEvent* pe);
-   void wheelEvent(QWheelEvent* pe);
-   void keyPressEvent(QKeyEvent* pe);
+    void initializeGL();
+    void resizeGL(int nWidth, int nHeight);
+    void paintGL();
+    void mousePressEvent(QMouseEvent* pe);
+    void mouseMoveEvent(QMouseEvent* pe);
+    void mouseReleaseEvent(QMouseEvent* pe);
+    void wheelEvent(QWheelEvent* pe);
+    void keyPressEvent(QKeyEvent* pe);
+    void keyReleaseEvent(QKeyEvent* pe);
+    inline void moveCamera(int direction);
     Camera camera;
     QPoint ptrMousePosition;
     Render render;
     Chunk test_chunk;
+    // for  multi-keypress
+    QSet<Qt::Key> keysPressed;
+//    bool m_bFirstRelease;
 };
 
 #endif // SCENE_H

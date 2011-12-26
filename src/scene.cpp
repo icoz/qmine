@@ -1,16 +1,18 @@
 #include "scene.h"
+#include "mainwindow.h"
 
 Scene::Scene(QWidget *parent) :
     QGLWidget(parent)
 {
-//    test_chunk.randomGenerate(100);
-//    test_chunk.setChunkPosition(QPointF(0,16));
-//    test_chunk.saveToFile("out_0_1.chunk");
-//    test_chunk.randomGenerate(50);
-//    test_chunk.setChunkPosition(QPointF(16,0));
-//    test_chunk.saveToFile("out_1_0.chunk");
-    //test_chunk.randomGenerate(150);
-    //test_chunk.setChunkPosition(QPointF(0,0));
+    test_chunk.randomGenerate(100);
+    test_chunk.setChunkPosition(QPointF(0,16));
+    test_chunk.saveToFile("out_0_1.chunk");
+    test_chunk.randomGenerate(50);
+    test_chunk.setChunkPosition(QPointF(16,0));
+    test_chunk.saveToFile("out_1_0.chunk");
+    test_chunk.randomGenerate(150);
+    test_chunk.setChunkPosition(QPointF(0,0));
+    test_chunk.saveToFile("out_0_0.chunk");
     test_chunk.loadFromFile("out_0_0.chunk");
 }
 
@@ -22,7 +24,7 @@ void Scene::initializeGL()
     glEnable(GL_CULL_FACE);
 
     camera.x = camera.y =
-    camera.z = -15;
+    camera.z = 15;
     camera.xRot = camera.yRot = camera.zRot = 0;
     camera.scale = 1;
 
@@ -53,6 +55,14 @@ void Scene::resizeGL(int nWidth, int nHeight)
 
 void Scene::paintGL()
 {
+    MainWindow *m = NULL;
+    if (parent()->objectName() == "MainWindow")
+        m = ((MainWindow*) parent());
+    if (m)
+        m->printStatus(QString("x: %1, y: %2, z: %3, xR: %4, yR: %5, zR: %6")
+               .arg((int)camera.x).arg((int)camera.y).arg((int)camera.z)
+               .arg((int)camera.xRot).arg((int)camera.yRot).arg((int)camera.zRot)
+               );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_PROJECTION);
@@ -72,8 +82,8 @@ void Scene::paintGL()
     glScalef(camera.scale, camera.scale, camera.scale);
     glRotatef(camera.xRot, 1.0f, 0.0f, 0.0f);
     glRotatef(camera.yRot, 0.0f, 1.0f, 0.0f);
-    glRotatef(camera.zRot, 0.0f, 0.0f, 1.0f);
-    glTranslatef(camera.x, camera.y, camera.z);
+    //glRotatef(camera.zRot, 0.0f, 0.0f, 1.0f);
+    glTranslatef(-camera.x, -camera.y, -camera.z);
     //gluLookAt(camera.x, camera.y, camera.z, 0, 0, 0, 0, 100, 0);
 //    glTranslatef(-5.0f, -5.0f, 7.0f);
 //    glRotatef(0.01, 1.0f, 0.0f, 0.0f);
@@ -101,12 +111,18 @@ void Scene::mouseReleaseEvent(QMouseEvent* pe)
 
 void Scene::mouseMoveEvent(QMouseEvent* pe)
 {
-   camera.xRot += 180/camera.scale*(GLfloat)(pe->y()-ptrMousePosition.y())/height();
-   camera.yRot += 180/camera.scale*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
+    camera.xRot += 180/camera.scale*(GLfloat)(pe->y()-ptrMousePosition.y())/height();
+    camera.yRot += 180/camera.scale*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
 
-   ptrMousePosition = pe->pos();
+    if (camera.xRot > 360) camera.xRot -= 360;
+    if (camera.xRot < -360) camera.xRot += 360;
+    if (camera.yRot > 360) camera.yRot -= 360;
+    if (camera.yRot < -360) camera.yRot += 360;
+//    if (camera.zRot > 360) camera.zRot -= 360;
+//    if (camera.zRot < -360) camera.zRot += 360;
+    ptrMousePosition = pe->pos();
 
-   updateGL();
+    updateGL();
 }
 
 void Scene::wheelEvent(QWheelEvent* pe)
@@ -120,19 +136,98 @@ void Scene::wheelEvent(QWheelEvent* pe)
 
 void Scene::keyPressEvent(QKeyEvent* pe)
 {
-    const GLfloat velocity = 0.1;
-    const GLfloat dir = 0;
-    switch (pe->key())
+//    m_bFirstRelease = true;
+    keysPressed += (Qt::Key) pe->key();
+    pe->accept();
+
+    if (keysPressed.contains(Qt::Key_Escape))
+        qApp->quit();
+    if (keysPressed.contains(Qt::Key_W)) {
+        if (keysPressed.contains(Qt::Key_A)){
+            moveCamera(4);
+        }else if (keysPressed.contains(Qt::Key_D)){
+            moveCamera(5);
+        }else
+            moveCamera(0);
+    }else if (keysPressed.contains(Qt::Key_S)){
+        if (keysPressed.contains(Qt::Key_A)){
+            moveCamera(6);
+        }else if (keysPressed.contains(Qt::Key_D)){
+            moveCamera(7);
+        }else
+            moveCamera(2);
+    }else if (keysPressed.contains(Qt::Key_A)){
+        moveCamera(1);
+    }else if (keysPressed.contains(Qt::Key_D)){
+        moveCamera(3);
+    }
+/*    switch (pe->key())
     {
     case Qt::Key_W:
-        camera.x -= velocity  *sin(camera.yRot) * sin(-camera.xRot+dir);
-        camera.y += velocity * cos(-camera.yRot + dir);
-        camera.z -= velocity  * sin(camera.yRot) * cos(-camera.xRot + dir);
+        break;
+    case Qt::Key_A:
+        break;
+    case Qt::Key_S:
+        break;
+    case Qt::Key_D:
         break;
     case Qt::Key_Escape:
-        this->close();
+        qApp->quit();
     break;
-    }
+    }*/
 
     updateGL();
+}
+
+void Scene::keyReleaseEvent(QKeyEvent *pe) {
+//    if(m_bFirstRelease) {
+//        processMultiKeys(keysPressed);
+//    }
+//    m_bFirstRelease = false;
+    keysPressed -= (Qt::Key) pe->key();
+}
+
+
+void Scene::moveCamera(int direction)
+{
+    const GLfloat velocity = 0.1;
+    GLfloat dir_x,dir_y;
+    dir_x = dir_y = 0;
+    switch (direction){
+    case 0: // forward = W
+        dir_x = 0;
+        dir_y = 0;
+        break;
+    case 1: // left  = A
+        dir_x = -camera.xRot;
+        dir_y = -90;
+        break;
+    case 2: // bask = S
+        dir_x = 180;
+        dir_y = 0;
+        break;
+    case 3: // right = D
+        dir_x = -camera.xRot;
+        dir_y = 90;
+        break;
+    case 4: // forward-left = WA
+        dir_x = -camera.xRot/2;
+        dir_y = -45;
+        break;
+    case 5: // forward-right = WD
+        dir_x = -camera.xRot/2;
+        dir_y = 45;
+        break;
+    case 6: // back-left = SA
+        dir_x = 180;//90-camera.xRot/2;
+        dir_y = 45;
+        break;
+    case 7: // back-right = SD
+        dir_x = 180;//90-camera.xRot/2;
+        dir_y = -45;
+        break;
+    }
+    camera.x += velocity  * sin((camera.yRot+dir_y)/180*M_PI) * cos((camera.xRot+dir_x)/180*M_PI);
+    camera.y -= velocity  * sin((camera.xRot+dir_x)/180*M_PI);
+    camera.z -= velocity  * cos((camera.yRot+dir_y)/180*M_PI) * cos((camera.xRot+dir_x)/180*M_PI);
 }//*/
