@@ -10,6 +10,7 @@ enum BlockType {
     btGrass,
     btGold,
     btDiamond,
+    btWood,
     btMAX_ID
 };
 

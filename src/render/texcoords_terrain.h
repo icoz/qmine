@@ -12,7 +12,7 @@
 
 
 const avTexCube texture_by_id[] = {
-    {{// Pachma
+    {{// Pachma : front, back, right, left, top, bottom
         tex_id(0),tex_id(0),tex_id(0),
         tex_id(0),tex_id(0),tex_id(0)
     }},
@@ -35,6 +35,10 @@ const avTexCube texture_by_id[] = {
     {{// Diamond
         tex_id(3*16+2),tex_id(3*16+2),tex_id(3*16+2),
         tex_id(3*16+2),tex_id(3*16+2),tex_id(3*16+2)
+    }},
+    {{// Wood
+        tex_id(1*16+4),tex_id(1*16+4),tex_id(1*16+4),
+        tex_id(1*16+4),tex_id(1*16+5),tex_id(1*16+5)
     }}
 };
 
