@@ -14,11 +14,14 @@ class Chunk
 {
 public:
     Chunk();
+    ~Chunk();
     void randomGenerate(int count);
     void loadFromFile(QString filename);
     void saveToFile(QString filename);
     void updateArrays();
+    void setChunkPosition(QPointF pos) {chunk_pos = pos; updateArrays();}
 protected:
+    QPointF chunk_pos;
     QVector<avVertex3> vertex_array;
     QVector<avTexCube> texcoord_array;
     QList<Block> blocks;

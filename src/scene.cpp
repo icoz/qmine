@@ -3,7 +3,15 @@
 Scene::Scene(QWidget *parent) :
     QGLWidget(parent)
 {
-    test_chunk.randomGenerate(150);
+//    test_chunk.randomGenerate(100);
+//    test_chunk.setChunkPosition(QPointF(0,16));
+//    test_chunk.saveToFile("out_0_1.chunk");
+//    test_chunk.randomGenerate(50);
+//    test_chunk.setChunkPosition(QPointF(16,0));
+//    test_chunk.saveToFile("out_1_0.chunk");
+    //test_chunk.randomGenerate(150);
+    //test_chunk.setChunkPosition(QPointF(0,0));
+    test_chunk.loadFromFile("out_0_0.chunk");
 }
 
 void Scene::initializeGL()
