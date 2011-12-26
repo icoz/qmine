@@ -2,6 +2,20 @@
 
 Render::Render()
 {
+    // no GL stuff here! We need GL-context first
+}
+
+Render::~Render()
+{
+    glDeleteTextures(1,&tex_id);
+}
+
+void Render::initRender()
+{
+    tex_id = allocateTexture(":/terrain.png");
+//    GLuint tex_id = QGLWidget::bindTexture(":/res/terrain.png");
+    //qDebug("terrain.png tex_id=%d", tex_id);
+
 }
 
 void Render::drawGrid(GLfloat gridStep)
@@ -38,140 +52,97 @@ void Render::drawGrid(GLfloat gridStep)
             glVertex3f(0.0, y, 10.0);
         }
         glEnd();
-    glPopMatrix();
 }
 
-void Render::drawTestCube(GLfloat size)
+void Render::drawTestCube(GLfloat x, GLfloat y, GLfloat z, BlockType type)
 {
+    QVector<avVertex3> v;
+    QVector<avTexCube> t;
+    for (unsigned int i = 0; i < sizeof(cube)/sizeof(GLfloat); i += 3){
+        v.append(avVertex3(x + cube[i], y + cube[i+1], z + cube[i+2]));
+    }
+    t.append(texture_by_id[type]);
+
     glPushMatrix();
-//	glEnable(GL_TEXTURE_2D);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-//	glBindTexture(GL_TEXTURE_2D, textures[block->type]);
-    //glTranslatef(0.0,0.0,0.0);
-    GLfloat x,y,z;
-    x=y=z=0.0f;
-    glScalef(size,size,size);
-    glColor3f(1.0, 1.0, 1.0);
-    //glCallList(listBlock);
-        glBegin(GL_QUADS);
-        glColor3f(1.0, 0.0, 1.0);
-            // front face
-            glNormal3f( 0.0f, 0.0f, 1.0f);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x - size/2, y - size/2, z + size/2);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x + size/2, y - size/2, z + size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x + size/2, y + size/2, z + size/2);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x - size/2, y + size/2, z + size/2);
-            // back face
-            glNormal3f( 0.0f, 0.0f, -1.0f);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x - size/2, y - size/2, z - size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x - size/2, y + size/2, z - size/2);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x + size/2, y + size/2, z - size/2);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x + size/2, y - size/2, z - size/2);
-            // left face
-            glNormal3f( -1.0f, 0.0f, 0.0f);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x - size/2, y - size/2, z - size/2);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x - size/2, y - size/2, z + size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x - size/2, y + size/2, z + size/2);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x - size/2, y + size/2, z - size/2);
-            // right face
-            glNormal3f( 1.0f, 0.0f, 0.0f);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x + size/2, y - size/2, z - size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x + size/2, y + size/2, z - size/2);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x + size/2, y + size/2, z + size/2);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x + size/2, y - size/2, z + size/2);
-            // top face
-            glNormal3f( 0.0f, 1.0f, 0.0f);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x - size/2, y + size/2, z - size/2);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x - size/2, y + size/2, z + size/2);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x + size/2, y + size/2, z + size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x + size/2, y + size/2, z - size/2);
-            // bottom face
-            glNormal3f( 0.0f, -1.0f, 0.0f);
-            //glTexCoord2f(0.0, 0.0);
-            glVertex3f(x - size/2, y - size/2, z - size/2);
-            //glTexCoord2f(1.0, 0.0);
-            glVertex3f(x + size/2, y - size/2, z - size/2);
-            //glTexCoord2f(1.0, 1.0);
-            glVertex3f(x + size/2, y - size/2, z + size/2);
-            //glTexCoord2f(0.0, 1.0);
-            glVertex3f(x - size/2, y - size/2, z + size/2);
-        glEnd(); //*/
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            glFrontFace(GL_CW);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+            glColor3f(1.0, 1.0, 1.0);
+            glBindTexture(GL_TEXTURE_2D, tex_id);
+            glTexCoordPointer(2, GL_FLOAT, 0, t.constData());
+            //glNormalPointer(GL_FLOAT, 0, ch->normal);
+            glVertexPointer(3, GL_FLOAT, 0, v.constData());
+            glDrawArrays(GL_QUADS, 0, 24);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
+//    QGLWidget::deleteTexture(tex_id);
 }
 
-void Render::drawTestCube2(GLfloat size)
+GLuint Render::allocateTexture(QString filename)
 {
-    GLfloat vertex[] = {
-        //0 --+
-        -0.5, -0.5, +0.5,
-        //1 -++
-        -0.5, +0.5, +0.5,
-        //2 +-+
-        +0.5, -0.5, +0.5,
-        //3 +++
-        +0.5, +0.5, +0.5,
-        //4 +--
-        +0.5, -0.5, -0.5,
-        //5 ++-
-        +0.5, +0.5, -0.5,
-        //6 ---
-        -0.5, -0.5, -0.5,
-        //7 -+-
-        -0.5, +0.5, -0.5
-    };
-    GLubyte indx[] = {
-        //front 0132
-        0,1,3,2,
-        //back 4576
-        4,5,7,6,
-        //right 2354
-        2,3,5,4,
-        //left 6710
-        6,7,1,0,
-        //top 1753
-        1,7,5,3,
-        //bottom 6024
-        6,0,2,4
-    };
+    /* Generate texture */
+    GLuint texture_id;
+
+    // загрузка изображений
+    QImage image; // создаём объекты класса QImage (изображения)
+    image.load(filename); // загружаем изображение в переменную image
+    // конвертируем изображение в формат для работы с OpenGL:
+    image=QGLWidget::convertToGLFormat(image);
+
+    // создание имён для текстурных объектов
+    glGenTextures(1, &texture_id); // создаём два имени и записываем их в массив
+
+    // создаём и связываем текстурные объекты с состоянием текстуры
+    // 1-ый текстурный объект
+    // создаём и связываем 1-ый текстурный объект с последующим состоянием текстуры
+    glBindTexture(GL_TEXTURE_2D, texture_id);
+    // связываем текстурный объект с изображением
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, (GLsizei)image.width(), (GLsizei)image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
+
+    // дополнительные параметры текстурного объекта
+    // задаём линейную фильтрацию вблизи:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // задаём линейную фильтрацию вдали:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // задаём: при фильтрации игнорируются тексели, выходящие за границу текстуры для s координаты
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    // задаём: при фильтрации игнорируются тексели, выходящие за границу текстуры для t координаты
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // задаём: цвет текселя полностью замещает цвет фрагмента фигуры
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    return texture_id;
+}
+
+void Render::drawChunk(Chunk *ch)
+{
     glPushMatrix();
-    glEnable(GL_TEXTURE_2D);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CW);
-//	glBindTexture(GL_TEXTURE_2D, textures[block->type]);
-    glTranslatef(2.0,2.0,2.0);
-    glScalef(size,size,size);
-    glColor3f(0.0, 0.0, 1.0);
-    glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3,GL_FLOAT,0,vertex);
-        glDrawElements(GL_QUADS, 6*4, GL_UNSIGNED_BYTE, indx);
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_TEXTURE_2D);
+        glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+            glFrontFace(GL_CW);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+            glColor3f(1.0, 1.0, 1.0);
+            glBindTexture(GL_TEXTURE_2D, tex_id);
+            glTexCoordPointer(2, GL_FLOAT, 0, ch->texcoord_array.constData());
+            //glNormalPointer(GL_FLOAT, 0, ch->normal);
+            glVertexPointer(3, GL_FLOAT, 0, ch->vertex_array.constData());
+            glDrawArrays(GL_QUADS, 0, 24*ch->blocks.size()); // each block is 24 vertex
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisable(GL_CULL_FACE);
+        glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
 

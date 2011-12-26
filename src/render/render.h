@@ -4,14 +4,23 @@
 #include <QtCore>
 #include <QtOpenGL>
 
+#include "gfx_primitives.h"
+#include "texcoords_terrain.h"
+#include "../world/chunk.h"
+
 class Render
 {
 public:
     Render();
+    ~Render();
+    void initRender();
     static void drawGrid(GLfloat gridStep);
-    static void drawTestCube(GLfloat size);
-    static void drawTestCube2(GLfloat size);
-//    void setProjection();
+    void drawTestCube(GLfloat x,GLfloat y,GLfloat z,BlockType type);
+    static GLuint allocateTexture(QString filename);
+    void drawChunk(Chunk *ch);
+
+protected:
+    GLuint tex_id;
 };
 
 #endif // RENDER_H
