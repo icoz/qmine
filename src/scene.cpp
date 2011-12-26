@@ -139,7 +139,12 @@ void Scene::keyPressEvent(QKeyEvent* pe)
 //    m_bFirstRelease = true;
     keysPressed += (Qt::Key) pe->key();
     pe->accept();
+    checkPressedKeys();
 
+    updateGL();
+}
+
+void Scene::checkPressedKeys(){
     if (keysPressed.contains(Qt::Key_Escape))
         qApp->quit();
     if (keysPressed.contains(Qt::Key_W)) {
@@ -161,30 +166,12 @@ void Scene::keyPressEvent(QKeyEvent* pe)
     }else if (keysPressed.contains(Qt::Key_D)){
         moveCamera(3);
     }
-/*    switch (pe->key())
-    {
-    case Qt::Key_W:
-        break;
-    case Qt::Key_A:
-        break;
-    case Qt::Key_S:
-        break;
-    case Qt::Key_D:
-        break;
-    case Qt::Key_Escape:
-        qApp->quit();
-    break;
-    }*/
-
-    updateGL();
 }
 
 void Scene::keyReleaseEvent(QKeyEvent *pe) {
-//    if(m_bFirstRelease) {
-//        processMultiKeys(keysPressed);
-//    }
-//    m_bFirstRelease = false;
     keysPressed -= (Qt::Key) pe->key();
+    pe->accept();
+    checkPressedKeys();
 }
 
 

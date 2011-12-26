@@ -28,6 +28,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent* pe);
     void wheelEvent(QWheelEvent* pe);
     void keyPressEvent(QKeyEvent* pe);
+    void checkPressedKeys();
     void keyReleaseEvent(QKeyEvent* pe);
     inline void moveCamera(int direction);
     Camera camera;
