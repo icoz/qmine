@@ -18,7 +18,8 @@ SOURCES += src/main.cpp \
 	src/render/render.cpp \
 	src/world/entity.cpp \
 	src/world/block.cpp \
-	src/world/chunk.cpp
+	src/world/chunk.cpp \
+    src/mainwindow.cpp
 
 HEADERS  += \
 	src/scene.h \
@@ -27,7 +28,8 @@ HEADERS  += \
 	src/world/block.h \
 	src/world/chunk.h \
 	src/render/gfx_primitives.h \
-	src/render/texcoords_terrain.h
+	src/render/texcoords_terrain.h \
+    src/mainwindow.h
 
 FORMS    +=
 
