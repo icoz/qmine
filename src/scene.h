@@ -27,7 +27,7 @@ protected:
    void mouseMoveEvent(QMouseEvent* pe);
    void mouseReleaseEvent(QMouseEvent* pe);
    void wheelEvent(QWheelEvent* pe);
-//   void keyPressEvent(QKeyEvent* pe);
+   void keyPressEvent(QKeyEvent* pe);
     Camera camera;
     QPoint ptrMousePosition;
     Render render;

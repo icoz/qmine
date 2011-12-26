@@ -21,8 +21,8 @@ void Scene::initializeGL()
     glShadeModel(GL_FLAT);
     glEnable(GL_CULL_FACE);
 
-    camera.x = camera.y = -5;
-    camera.z = -5;
+    camera.x = camera.y =
+    camera.z = -15;
     camera.xRot = camera.yRot = camera.zRot = 0;
     camera.scale = 1;
 
@@ -37,17 +37,18 @@ void Scene::initializeGL()
 
 void Scene::resizeGL(int nWidth, int nHeight)
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
 
-    GLfloat ratio=(GLfloat)nHeight/(GLfloat)nWidth;
+//    GLfloat ratio=(GLfloat)nHeight/(GLfloat)nWidth;
 
-    if (nWidth>=nHeight)
-       glOrtho(-10.0/ratio, 10.0/ratio, -10.0, 10.0, -10.0, 10.0);
-    else
-       glOrtho(-10.0, 10.0, -10.0*ratio, 10.0*ratio, -10.0, 10.0);
-    //gluPerspective(45, nWidth/nHeight, 1.0, 100.0);
+//    if (nWidth>=nHeight)
+//       glOrtho(-10.0/ratio, 10.0/ratio, -10.0, 10.0, -10.0, 10.0);
+//    else
+//       glOrtho(-10.0, 10.0, -10.0*ratio, 10.0*ratio, -10.0, 10.0);
+
     glViewport(0, 0, (GLint)nWidth, (GLint)nHeight);
+    updateGL();
 }
 
 void Scene::paintGL()
@@ -59,20 +60,21 @@ void Scene::paintGL()
 
     GLfloat ratio=(GLfloat)height()/(GLfloat)width();
 
-    if (width()>=height())
-       glOrtho(-10.0/ratio, 10.0/ratio, -10.0, 10.0, -10.0, 10.0);
-    else
-       glOrtho(-10.0, 10.0, -10.0*ratio, 10.0*ratio, -10.0, 10.0);
+//    if (width()>=height())
+//       glOrtho(-10.0/ratio, 10.0/ratio, -10.0, 10.0, -10.0, 100.0);
+//    else
+//       glOrtho(-10.0, 10.0, -10.0*ratio, 10.0*ratio, -10.0, 100.0);
+    gluPerspective(45, 1/ratio, 1.0, 100.0);
 
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     glScalef(camera.scale, camera.scale, camera.scale);
     glRotatef(camera.xRot, 1.0f, 0.0f, 0.0f);
     glRotatef(camera.yRot, 0.0f, 1.0f, 0.0f);
     glRotatef(camera.zRot, 0.0f, 0.0f, 1.0f);
     glTranslatef(camera.x, camera.y, camera.z);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
+    //gluLookAt(camera.x, camera.y, camera.z, 0, 0, 0, 0, 100, 0);
 //    glTranslatef(-5.0f, -5.0f, 7.0f);
 //    glRotatef(0.01, 1.0f, 0.0f, 0.0f);
     render.drawGrid(1);
@@ -115,55 +117,22 @@ void Scene::wheelEvent(QWheelEvent* pe)
    updateGL();
 }
 
-/*
-void Scene3D::keyPressEvent(QKeyEvent* pe)
+
+void Scene::keyPressEvent(QKeyEvent* pe)
 {
-   switch (pe->key())
-   {
-      case Qt::Key_Plus:
-         scale_plus();
-      break;
+    const GLfloat velocity = 0.1;
+    const GLfloat dir = 0;
+    switch (pe->key())
+    {
+    case Qt::Key_W:
+        camera.x -= velocity  *sin(camera.yRot) * sin(-camera.xRot+dir);
+        camera.y += velocity * cos(-camera.yRot + dir);
+        camera.z -= velocity  * sin(camera.yRot) * cos(-camera.xRot + dir);
+        break;
+    case Qt::Key_Escape:
+        this->close();
+    break;
+    }
 
-      case Qt::Key_Equal:
-         scale_plus();
-      break;
-
-      case Qt::Key_Minus:
-         scale_minus();
-      break;
-
-      case Qt::Key_Up:
-         rotate_up();
-      break;
-
-      case Qt::Key_Down:
-         rotate_down();
-      break;
-
-      case Qt::Key_Left:
-        rotate_left();
-      break;
-
-      case Qt::Key_Right:
-         rotate_right();
-      break;
-
-      case Qt::Key_Z:
-         translate_down();
-      break;
-
-      case Qt::Key_X:
-         translate_up();
-      break;
-
-      case Qt::Key_Space:
-         defaultScene();
-      break;
-
-      case Qt::Key_Escape:
-         this->close();
-      break;
-   }
-
-   updateGL();
+    updateGL();
 }//*/
