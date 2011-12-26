@@ -6,14 +6,21 @@
 
 #include "gfx_primitives.h"
 #include "texcoords_terrain.h"
-//#include "../"
+#include "../world/chunk.h"
 
 class Render
 {
 public:
     Render();
+    ~Render();
+    void initRender();
     static void drawGrid(GLfloat gridStep);
-    static void drawTestCube(GLfloat x,GLfloat y,GLfloat z,GLfloat size);
+    void drawTestCube(GLfloat x,GLfloat y,GLfloat z,BlockType type);
+    static GLuint allocateTexture(QString filename);
+    void drawChunk(Chunk *ch);
+
+protected:
+    GLuint tex_id;
 };
 
 #endif // RENDER_H

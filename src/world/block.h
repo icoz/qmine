@@ -7,9 +7,9 @@ enum BlockType {
     btPachma = 0,
     btStone,
     btDirt,
-//    btGrass,
-//    btGold,
-//    btDiamond,
+    btGrass,
+    btGold,
+    btDiamond,
     btMAX_ID
 };
 
@@ -17,6 +17,7 @@ class Block : public Entity
 {
 public:
     Block(GLfloat x, GLfloat y, GLfloat z, BlockType _type);
+    Block(GLfloat x, GLfloat y, GLfloat z, int _type);
 protected:
     int type; // eq BlockType
 

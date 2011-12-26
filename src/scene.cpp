@@ -3,6 +3,7 @@
 Scene::Scene(QWidget *parent) :
     QGLWidget(parent)
 {
+    test_chunk.randomGenerate(150);
 }
 
 void Scene::initializeGL()
@@ -12,10 +13,12 @@ void Scene::initializeGL()
     glShadeModel(GL_FLAT);
     glEnable(GL_CULL_FACE);
 
-    camera.x = camera.y = camera.z = 5;
+    camera.x = camera.y = -5;
+    camera.z = -5;
     camera.xRot = camera.yRot = camera.zRot = 0;
     camera.scale = 1;
 
+    render.initRender();
 //    getVertexArray();
 //    getColorArray();
 //    getIndexArray();
@@ -43,20 +46,34 @@ void Scene::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
+    GLfloat ratio=(GLfloat)height()/(GLfloat)width();
+
+    if (width()>=height())
+       glOrtho(-10.0/ratio, 10.0/ratio, -10.0, 10.0, -10.0, 10.0);
+    else
+       glOrtho(-10.0, 10.0, -10.0*ratio, 10.0*ratio, -10.0, 10.0);
 
     glScalef(camera.scale, camera.scale, camera.scale);
     glRotatef(camera.xRot, 1.0f, 0.0f, 0.0f);
     glRotatef(camera.yRot, 0.0f, 1.0f, 0.0f);
     glRotatef(camera.zRot, 0.0f, 0.0f, 1.0f);
     glTranslatef(camera.x, camera.y, camera.z);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
 //    glTranslatef(-5.0f, -5.0f, 7.0f);
 //    glRotatef(0.01, 1.0f, 0.0f, 0.0f);
-    Render::drawGrid(1);
-    Render::drawTestCube(2,2,2,1);
-    //Renderer::renderWorld();
-
+    render.drawGrid(1);
+//    render.drawTestCube(0,0,0,btDirt);
+//    render.drawTestCube(1,1,1,btDirt);
+//    render.drawTestCube(2,2,2,btDirt);
+//    render.drawTestCube(2,3,2,btStone);
+//    render.drawTestCube(2,4,2,btStone);
+    render.drawChunk(&test_chunk);
 
 //    drawAxis();
 //    drawFigure();
@@ -75,7 +92,7 @@ void Scene::mouseReleaseEvent(QMouseEvent* pe)
 void Scene::mouseMoveEvent(QMouseEvent* pe)
 {
    camera.xRot += 180/camera.scale*(GLfloat)(pe->y()-ptrMousePosition.y())/height();
-   camera.zRot += 180/camera.scale*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
+   camera.yRot += 180/camera.scale*(GLfloat)(pe->x()-ptrMousePosition.x())/width();
 
    ptrMousePosition = pe->pos();
 

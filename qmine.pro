@@ -14,22 +14,22 @@ RCC_DIR = build
 UI_DIR = build
 
 SOURCES += src/main.cpp \
-    src/scene.cpp \
-    src/render/render.cpp \
-    src/world/entity.cpp \
-    src/world/block.cpp \
-    src/world/chunk.cpp
+	src/scene.cpp \
+	src/render/render.cpp \
+	src/world/entity.cpp \
+	src/world/block.cpp \
+	src/world/chunk.cpp
 
 HEADERS  += \
-    src/scene.h \
-    src/render/render.h \
-    src/world/entity.h \
-    src/world/block.h \
-    src/world/chunk.h \
-    src/render/gfx_primitives.h \
-    src/render/texcoords_terrain.h
+	src/scene.h \
+	src/render/render.h \
+	src/world/entity.h \
+	src/world/block.h \
+	src/world/chunk.h \
+	src/render/gfx_primitives.h \
+	src/render/texcoords_terrain.h
 
 FORMS    +=
 
 RESOURCES += \
-    src/res/res.qrc
+	src/res/res.qrc

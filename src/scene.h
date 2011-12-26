@@ -30,6 +30,8 @@ protected:
 //   void keyPressEvent(QKeyEvent* pe);
     Camera camera;
     QPoint ptrMousePosition;
+    Render render;
+    Chunk test_chunk;
 };
 
 #endif // SCENE_H
